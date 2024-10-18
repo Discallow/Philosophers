@@ -21,6 +21,12 @@ typedef struct s_data	t_data;
 # define MICROSECOND 1000000
 # define MILLISECOND 1000
 
+typedef enum	e_action
+{
+	READ,
+	CHANGE,
+}				t_action;
+
 typedef enum	e_message
 {
 	FORK,
@@ -54,6 +60,8 @@ typedef struct	s_philo
 	int				place_in_table;
 	long			meals_num;
 	long			meal_counter;
+	bool			philos_full;
+	long			last_meal_time;
 	t_fork			*first_fork;
 	t_fork			*second_fork;
 	bool			philos_ready;
@@ -62,17 +70,17 @@ typedef struct	s_philo
 
 typedef	struct	s_data
 {
+	pthread_t		monitor_thread;
 	long			philo_num;
 	long			time_to_die;
 	long			time_to_eat;
 	long			time_to_sleep;
 	long			min_times_to_eat;
 	long			start;
-	long			last_meal_time;
 	long			num_philos_full;
 	bool			simulation_ended;
 	bool			philos_ready;
-	bool			philos_full;
+	long			num_philos_ready;
 	pthread_mutex_t	write_mtx;
 	pthread_mutex_t	mtx;
 	t_fork			*forks;
@@ -91,9 +99,13 @@ int	init_data(t_data *data);
 /* UTILS */
 int		thread_action(pthread_t *th, void *r(void *), void *data, t_code code);
 int		mutex_actions(pthread_mutex_t *mtx, t_code code);
+long	read_change_long(pthread_mutex_t *mtx, t_action action, long *value);
+bool	read_change_bool(pthread_mutex_t *mtx, t_action action, bool *value);
+long	gettime(long time);
 
 void	write_message(t_philo *philo, t_message message);
 
 int	start_dinner(t_data *data);
+void	*monitor_thread(void *arg);
 
 #endif

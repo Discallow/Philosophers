@@ -6,7 +6,7 @@
 /*   By: discallow <discallow@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 14:35:04 by discallow         #+#    #+#             */
-/*   Updated: 2024/10/15 19:19:37 by discallow        ###   ########.fr       */
+/*   Updated: 2024/10/18 14:12:22 by discallow        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,9 +83,9 @@ static long	check_valid_input(char *str)
 int	parse(t_data *data, char **av)
 {
 	data->philo_num = check_valid_input(av[1]);
-	data->time_to_die = check_valid_input(av[2]);
-	data->time_to_eat = check_valid_input(av[3]);
-	data->time_to_sleep = check_valid_input(av[4]);
+	data->time_to_die = check_valid_input(av[2]) * MILLISECOND;
+	data->time_to_eat = check_valid_input(av[3]) * MILLISECOND;
+	data->time_to_sleep = check_valid_input(av[4]) * MILLISECOND;
 	if (av[5])
 		data->min_times_to_eat = check_valid_input(av[5]);
 	else

@@ -6,7 +6,7 @@
 /*   By: discallow <discallow@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 15:42:03 by discallow         #+#    #+#             */
-/*   Updated: 2024/10/15 19:22:35 by discallow        ###   ########.fr       */
+/*   Updated: 2024/10/18 16:56:59 by discallow        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,14 +73,13 @@ int	init_data(t_data *data)
 	data->forks = ft_calloc(sizeof(t_fork), data->philo_num);
 	data->philos = ft_calloc(sizeof(t_philo), data->philo_num);
 	data->simulation_ended = false;
+	data->num_philos_ready = 0;
 	data->philos_ready = false;
-	data->philos_full = false;
 	data->num_philos_full = 0;
 	data->start = 0;
 	if (mutex_actions(&data->mtx, INIT)
 		|| mutex_actions(&data->write_mtx, INIT))
 		return (1);
-	data->last_meal_time = 0;
 	while (++i < data->philo_num)
 	{
 		if (mutex_actions(&data->forks[i].mtx, INIT)
@@ -92,6 +91,5 @@ int	init_data(t_data *data)
 		data->forks[i].fork_idx = i;
 		choose_fork(philo, data->forks, i);
 	}
-	i = 0;
 	return (0);
 }
