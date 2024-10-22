@@ -5,50 +5,111 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: discallow <discallow@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/15 15:09:06 by discallow         #+#    #+#             */
-/*   Updated: 2024/10/18 13:51:41 by discallow        ###   ########.fr       */
+/*   Created: 2024/10/22 16:57:01 by discallow         #+#    #+#             */
+/*   Updated: 2024/10/22 17:16:48 by discallow        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-
-long	read_change_long(pthread_mutex_t *mtx, t_action action, long *value)
+int	philo_died(t_data *data, int i)
 {
-	long	check;
-
-	if (action == READ)
+	if (!process_bool(&data->mtx, READ, &data->philos->philos_full)
+		&& gettime(MILLISECOND) - process_long(&data->philos[i].mtx, READ,
+			&data->philos[i].last_meal_time) > (data->time_to_die / 1000))
 	{
-		mutex_actions(mtx, LOCK);
-		check = *value;
-		mutex_actions(mtx, UNLOCK);
+		write_message(&data->philos[i], DIE);
+		process_bool(&data->mtx, CHANGE, &data->meal_end);
+		return (1);
 	}
-	else if (action == CHANGE)
-	{
-		mutex_actions(mtx, LOCK);
-		(*value)++;
-		check = *value;
-		mutex_actions(mtx, UNLOCK);
-	}
-	return (check);
+	return (0);
 }
 
-bool	read_change_bool(pthread_mutex_t *mtx, t_action action, bool *value)
+void	*monitor_thread(void *arg)
 {
-	bool	check;
+	t_data	*data;
+	int		i;
 
-	if (action == READ)
+	data = (t_data *)arg;
+	while (1)
 	{
-		mutex_actions(mtx, LOCK);
-		check = *value;
-		mutex_actions(mtx, UNLOCK);
+		if (process_long(&data->mtx, READ,
+				&data->num_philos_ready) == data->philo_num)
+			break ;
 	}
-	else if (action == CHANGE)
+	while (!process_bool(&data->mtx, READ, &data->meal_end))
 	{
-		mutex_actions(mtx, LOCK);
-		*value = true;
-		check = value;
-		mutex_actions(mtx, UNLOCK);
+		i = -1;
+		while (++i < data->philo_num && !process_bool(&data->mtx, READ,
+				&data->meal_end))
+			if (philo_died(data, i))
+				return (NULL);
 	}
-	return (check);
+	return (NULL);
+}
+
+long	gettime(long time)
+{
+	struct timeval	start;
+	long			elapsed;
+
+	if (gettimeofday(&start, NULL))
+	{
+		printf(YELLOW"gettimeofday function failed."RESET"\n");
+		return (LONG_MIN);
+	}
+	if (time == MICROSECOND)
+		elapsed = (start.tv_sec * MICROSECOND) + start.tv_usec;
+	else
+		elapsed = (start.tv_sec * MILLISECOND) + (start.tv_usec / MILLISECOND);
+	return (elapsed);
+}
+
+void	improved_usleep(long microseconds, t_data *data)
+{
+	long	start;
+	long	cur;
+	long	left;
+
+	start = gettime(MICROSECOND);
+	if (start == LONG_MIN)
+		return ;
+	while (gettime(MICROSECOND) - start < microseconds)
+	{
+		if (process_bool(&data->mtx, READ, &data->meal_end))
+			return ;
+		cur = gettime(MICROSECOND) - start;
+		left = microseconds - cur;
+		if (left > MILLISECOND)
+			usleep(left / 2);
+		else
+		{
+			while (1)
+			{
+				if ((gettime(MICROSECOND) - start >= microseconds))
+					return ;
+			}
+		}
+	}
+}
+
+void	write_message(t_philo *philo, t_message message)
+{
+	long	time;
+
+	time = gettime(MILLISECOND) - philo->data->start;
+	if (process_bool(&philo->data->mtx, READ, &philo->data->meal_end))
+		return ;
+	mtx_actions(&philo->data->write_mtx, LOCK);
+	if (message == FORK)
+		printf("%-6ld %d has taken a fork\n", time, philo->place_in_table);
+	else if (message == EAT)
+		printf("%-6ld %d is eating\n", time, philo->place_in_table);
+	else if (message == SLEEP)
+		printf("%-6ld %d is sleeping\n", time, philo->place_in_table);
+	else if (message == THINK)
+		printf("%-6ld %d is thinking\n", time, philo->place_in_table);
+	else if (message == DIE)
+		printf("%-6ld %d died\n", time, philo->place_in_table);
+	mtx_actions(&philo->data->write_mtx, UNLOCK);
 }

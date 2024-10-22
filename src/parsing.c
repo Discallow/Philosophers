@@ -6,7 +6,7 @@
 /*   By: discallow <discallow@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 14:35:04 by discallow         #+#    #+#             */
-/*   Updated: 2024/10/18 14:12:22 by discallow        ###   ########.fr       */
+/*   Updated: 2024/10/22 17:15:51 by discallow        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ static long	check_valid_input(char *str)
 			while (ft_isspace(str[i]))
 				i++;
 		else if (str[i] == '+')
-			while(str[i] == '+')
+			while (str[i] == '+')
 				i++;
 		if (ft_isdigit(str[i]))
 			break ;
