@@ -1,8 +1,10 @@
 NAME = philo
+BONUS = philo_bonus
 CC = cc 
 CFLAGS = -Wall -Wextra -Werror -pthread -g -I$(INCLUDE_DIR)
 INCLUDE_DIR = include
 RM = rm -f
+NAME_DIR = philo
 SRC_DIR = src
 OBJ_DIR = obj
 

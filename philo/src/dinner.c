@@ -6,7 +6,7 @@
 /*   By: discallow <discallow@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 12:33:33 by discallow         #+#    #+#             */
-/*   Updated: 2024/10/22 17:17:57 by discallow        ###   ########.fr       */
+/*   Updated: 2024/10/25 03:39:24 by discallow        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,18 +39,20 @@ void	eat(t_philo *philo)
 	mtx_actions(&philo->second_fork->mtx, UNLOCK);
 }
 
-void	think(t_philo *philo, int *flag)
+void	think(t_philo *philo, long *flag)
 {
 	if (process_bool(&philo->data->mtx, READ, &philo->data->meal_end))
 		return ;
-	write_message(philo, THINK);
+	if (process_long(&philo->data->mtx, READ, flag))
+	{
+		mtx_actions(&philo->data->mtx, LOCK);
+		*flag = 0;
+		mtx_actions(&philo->data->mtx, UNLOCK);
+	}
+	else
+		write_message(philo, THINK);
 	if (philo->data->philo_num % 2 == 0)
 		return ;
-	if (*flag)
-	{
-		*flag = 0;
-		return ;
-	}
 	if (philo->place_in_table % 2)
 		improved_usleep((philo->data->time_to_eat * 2
 				- philo->data->time_to_sleep) * 0.3, philo->data);
@@ -60,7 +62,7 @@ void	*routine(void *arg)
 {
 	t_philo	*philo;
 	t_data	*data;
-	int		flag;
+	long	flag;
 
 	flag = 1;
 	philo = (t_philo *)arg;
@@ -69,16 +71,17 @@ void	*routine(void *arg)
 	mtx_actions(&philo->mtx, LOCK);
 	philo->last_meal_time = gettime(MILLISECOND);
 	mtx_actions(&philo->mtx, UNLOCK);
+	think(philo, &flag);
 	process_long(&philo->data->mtx, CHANGE, &philo->data->num_philos_ready);
 	while (1)
 	{
 		if (process_bool(&philo->data->mtx, READ, &philo->data->meal_end)
 			|| process_bool(&philo->mtx, READ, &philo->philos_full))
 			return (NULL);
-		think(philo, &flag);
 		eat(philo);
 		write_message(philo, SLEEP);
 		improved_usleep(philo->data->time_to_sleep, philo->data);
+		think(philo, &flag);
 	}
 	return (NULL);
 }

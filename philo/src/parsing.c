@@ -6,7 +6,7 @@
 /*   By: discallow <discallow@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 14:35:04 by discallow         #+#    #+#             */
-/*   Updated: 2024/10/22 17:15:51 by discallow        ###   ########.fr       */
+/*   Updated: 2024/10/25 03:57:48 by discallow        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,16 +83,19 @@ static long	check_valid_input(char *str)
 int	parse(t_data *data, char **av)
 {
 	data->philo_num = check_valid_input(av[1]);
-	data->time_to_die = check_valid_input(av[2]) * MILLISECOND;
-	data->time_to_eat = check_valid_input(av[3]) * MILLISECOND;
-	data->time_to_sleep = check_valid_input(av[4]) * MILLISECOND;
+	data->time_to_die = check_valid_input(av[2]);
+	data->time_to_eat = check_valid_input(av[3]);
+	data->time_to_sleep = check_valid_input(av[4]);
 	if (av[5])
 		data->min_times_to_eat = check_valid_input(av[5]);
 	else
 		data->min_times_to_eat = -1;
-	if (data->philo_num == LONG_MIN || data->time_to_die == LONG_MIN
-		|| data->time_to_eat == LONG_MIN || data->time_to_die == LONG_MIN
+		if (data->philo_num == LONG_MIN || data->time_to_die == LONG_MIN
+		|| data->time_to_eat == LONG_MIN || data->time_to_sleep == LONG_MIN
 		|| data->min_times_to_eat == LONG_MIN)
-		return (1);
+			return (1);
+	data->time_to_die *= MILLISECOND;
+	data->time_to_eat *= MILLISECOND;
+	data->time_to_sleep *= MILLISECOND;
 	return (0);
 }

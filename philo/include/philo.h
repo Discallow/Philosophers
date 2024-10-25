@@ -6,7 +6,7 @@
 /*   By: discallow <discallow@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 17:18:10 by discallow         #+#    #+#             */
-/*   Updated: 2024/10/22 17:22:25 by discallow        ###   ########.fr       */
+/*   Updated: 2024/10/23 16:58:34 by discallow        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 # include <stdbool.h>
 # include <limits.h>
 # include <string.h>
+# include <errno.h>
 
 # define RESET	"\033[0m"
 # define RED	"\033[0;31m"
