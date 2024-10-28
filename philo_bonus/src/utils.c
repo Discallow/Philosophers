@@ -6,7 +6,7 @@
 /*   By: discallow <discallow@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 15:09:06 by discallow         #+#    #+#             */
-/*   Updated: 2024/10/24 16:42:17 by discallow        ###   ########.fr       */
+/*   Updated: 2024/10/26 22:23:45 by discallow        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,13 @@
 int	mtx_actions(pthread_mutex_t *mtx, t_code code)
 {
 	if (code == INIT && pthread_mutex_init(mtx, NULL))
-		return (printf(YELLOW"Error while starting mutex."RESET"\n"));
+		exit (printf(YELLOW"Error while starting mutex."RESET"\n"));
 	else if (code == DESTROY && pthread_mutex_destroy(mtx))
-		return (printf(YELLOW"Error while destroying mutex."RESET"\n"));
+		exit (printf(YELLOW"Error while destroying mutex."RESET"\n"));
 	else if (code == LOCK && pthread_mutex_lock(mtx))
-		return (printf(YELLOW"Error while locking mutex."RESET"\n"));
+		exit (printf(YELLOW"Error while locking mutex."RESET"\n"));
 	else if (code == UNLOCK && pthread_mutex_unlock(mtx))
-		return (printf(YELLOW"Error while unlocking mutex."RESET"\n"));
+		exit (printf(YELLOW"Error while unlocking mutex."RESET"\n"));
 	return (0);
 }
 
@@ -42,10 +42,7 @@ int	sem_actions(sem_t **sem, t_code code, char *name, unsigned int value)
 	{
 		*sem = sem_open(name, O_CREAT | O_EXCL, 0666, value);
 		if (*sem == SEM_FAILED)
-		{
-			perror("Error opening sem");
 			return (printf(YELLOW"Error while opening semaphore."RESET"\n"));
-		}
 	}
 	else if (code == CLOSE)
 	{

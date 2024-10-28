@@ -6,7 +6,7 @@
 /*   By: discallow <discallow@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 17:18:10 by discallow         #+#    #+#             */
-/*   Updated: 2024/10/23 16:58:34 by discallow        ###   ########.fr       */
+/*   Updated: 2024/10/26 21:12:58 by discallow        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,6 @@ typedef struct s_philo
 	pthread_t		philo_thread;
 	pthread_mutex_t	mtx;
 	int				place_in_table;
-	long			meals_num;
 	long			meal_counter;
 	bool			philos_full;
 	long			last_meal_time;
@@ -90,7 +89,6 @@ typedef struct s_data
 	long			time_to_sleep;
 	long			min_times_to_eat;
 	long			start;
-	long			num_philos_full;
 	bool			meal_end;
 	bool			philos_ready;
 	long			num_philos_ready;

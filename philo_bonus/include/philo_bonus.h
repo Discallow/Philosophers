@@ -6,7 +6,7 @@
 /*   By: discallow <discallow@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 17:18:10 by discallow         #+#    #+#             */
-/*   Updated: 2024/10/25 03:59:16 by discallow        ###   ########.fr       */
+/*   Updated: 2024/10/26 22:38:13 by discallow        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,13 @@ typedef struct s_data	t_data;
 
 # define MICROSECOND 1000000
 # define MILLISECOND 1000
+
+# define MAX_PHILO_NAME "/max_philo_sem"
+# define SEM_NAME "/main_sem"
+# define WRITE_SEM_NAME "/write_sem"
+# define FORKS_SEM_NAME "/forks_sem"
+# define EAT_SEM_NAME "/eat_sem"
+# define DEATH_SEM_NAME "/death_sem"
 
 typedef enum e_action
 {
@@ -73,7 +80,6 @@ typedef struct s_fork
 {
 	sem_t			*sem;
 	long			fork_idx;
-	char			*sem_name;
 }					t_fork;
 
 typedef struct s_philo
@@ -81,7 +87,6 @@ typedef struct s_philo
 	pid_t			pid;
 	pthread_mutex_t	mtx;
 	int				place_in_table;
-	long			meals_num;
 	long			meal_counter;
 	bool			philos_full;
 	long			last_meal_time;
@@ -91,27 +96,19 @@ typedef struct s_philo
 
 typedef struct s_data
 {
-	sem_t			*sem;
-	sem_t			*write_sem;
-	sem_t			*max_philo;
-	sem_t			*eat;
+	sem_t			*sem_data;
+	sem_t			*sem_write;
+	sem_t			*sem_max_philo;
+	sem_t			*sem_eat;
 	sem_t			*sem_death;
-	char			*sem_death_name;
 	pthread_t		kill_philos;
-	pthread_t		verify_satisfied;
-	char			*eat_sem_name;
-	int				status;
-	char			*max_philo_name;
+	pthread_t		check_phillo_full;
 	long			philo_num;
 	long			time_to_die;
 	long			time_to_eat;
 	long			time_to_sleep;
 	long			min_times_to_eat;
 	long			start;
-	long			num_philos_full;
-	bool			meal_end;
-	char			*write_sem_name;
-	char			*sem_name;
 	t_fork			*forks;
 	t_philo			*philos;
 }					t_data;
@@ -134,7 +131,7 @@ bool	process_bool(sem_t **sem, t_action action, bool *value);
 
 /*UTILS */
 long	gettime(long time);
-void	improved_usleep(long microseconds, t_data *data);
+void	improved_usleep(long microseconds);
 void	write_message(t_philo *philo, t_message message);
 void	clean_data(t_data *data);
 

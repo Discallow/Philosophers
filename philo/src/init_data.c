@@ -6,7 +6,7 @@
 /*   By: discallow <discallow@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 15:42:03 by discallow         #+#    #+#             */
-/*   Updated: 2024/10/22 17:00:33 by discallow        ###   ########.fr       */
+/*   Updated: 2024/10/26 21:11:55 by discallow        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,6 @@ int	init_data(t_data *data)
 	data->meal_end = false;
 	data->num_philos_ready = 0;
 	data->philos_ready = false;
-	data->num_philos_full = 0;
 	data->start = 0;
 	if (mtx_actions(&data->mtx, INIT) || mtx_actions(&data->write_mtx, INIT))
 		return (1);
