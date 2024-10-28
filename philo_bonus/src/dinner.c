@@ -14,6 +14,8 @@
 
 void	eat(t_philo *philo)
 {
+	if (philo->data->philo_num == 1)
+		sem_actions(&philo->data->sem_max_philo, POST, NULL, 0);
 	sem_actions(&philo->data->sem_max_philo, WAIT, NULL, 0);
 	sem_actions(&philo->data->forks->sem, WAIT, NULL, 0);
 	write_message(philo, FORK);
@@ -41,15 +43,20 @@ void	eat(t_philo *philo)
 
 void	think(t_philo *philo, int *flag)
 {
+	long	time_to_think;
+
 	if (*flag)
 		*flag = 0;
 	else
 		write_message(philo, THINK);
 	if (philo->data->philo_num % 2 == 0)
 		return ;
+	time_to_think = philo->data->time_to_eat * 2
+		- philo->data->time_to_sleep;
+	if (time_to_think < 0)
+		time_to_think = 0;
 	if (philo->place_in_table % 2)
-		improved_usleep((philo->data->time_to_eat * 2
-				- philo->data->time_to_sleep) * 0.3);
+		improved_usleep(time_to_think * 0.3);
 }
 
 void	routine(t_philo *philo)
@@ -68,45 +75,6 @@ void	routine(t_philo *philo)
 		improved_usleep(philo->data->time_to_sleep);
 		think(philo, &flag);
 	}
-}
-
-void	*kill_processes(void *arg)
-{
-	t_philo	*philo;
-	int		i;
-
-	philo = (t_philo *)arg;
-	sem_wait(philo->data->sem_death);
-	usleep(1000);
-	i = -1;
-	while (++i < philo->data->philo_num)
-		kill(philo[i].pid, SIGKILL);
-	return (NULL);
-}
-
-void	*check_phillo_full(void *arg)
-{
-	t_philo	*philo;
-	int		full;
-
-	philo = (t_philo *)arg;
-	full = -1;
-	while (++full < philo->data->philo_num)
-		sem_wait(philo->data->sem_eat);
-	sem_post(philo->data->sem_death);
-	return (NULL);
-}
-
-void	monitor_threads(t_data *data)
-{
-	if (data->min_times_to_eat > 0)
-	{
-		pthread_create(&data->check_phillo_full, NULL, check_phillo_full,
-			data->philos);
-		pthread_detach(data->check_phillo_full);
-	}
-	pthread_create(&data->kill_philos, NULL, kill_processes, data->philos);
-	pthread_detach(data->kill_philos);
 }
 
 int	start_dinner(t_data *data)

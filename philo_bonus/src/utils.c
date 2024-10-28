@@ -49,11 +49,6 @@ int	sem_actions(sem_t **sem, t_code code, char *name, unsigned int value)
 		if (sem_close(*sem))
 			return (printf(YELLOW"Error while closing semaphore."RESET"\n"));
 	}
-	else if (code == UNLINK)
-	{
-		if (sem_unlink(name))
-			return (printf(YELLOW"Error while unlinking semaphore."RESET"\n"));
-	}
 	else if (code == POST && sem_post(*sem))
 		return (printf(YELLOW"Error while unlocking semaphore."RESET"\n"));
 	else if (code == WAIT && sem_wait(*sem))
@@ -65,6 +60,7 @@ long	process_long(sem_t **sem, t_action action, long *value)
 {
 	long	check;
 
+	check = 0;
 	if (action == READ)
 	{
 		sem_wait(*sem);
@@ -85,6 +81,7 @@ bool	process_bool(sem_t **sem, t_action action, bool *value)
 {
 	bool	check;
 
+	check = false;
 	if (action == READ)
 	{
 		sem_wait(*sem);

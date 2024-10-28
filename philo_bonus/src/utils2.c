@@ -12,45 +12,6 @@
 
 #include "philo_bonus.h"
 
-int	philo_died(t_data *data, int i)
-{
-	long	last_meal_time;
-
-	mtx_actions(&data->philos[i].mtx, LOCK);
-	last_meal_time = data->philos[i].last_meal_time;
-	mtx_actions(&data->philos[i].mtx, UNLOCK);
-	if (!process_bool(&data->sem_data, READ, &data->philos->philos_full)
-		&& gettime(MILLISECOND) - last_meal_time > (data->time_to_die / 1000))
-	{
-		write_message(&data->philos[i], DIE);
-		sem_actions(&data->sem_write, WAIT, NULL, 0);
-		return (1);
-	}
-	return (0);
-}
-
-void	*monitor_thread(void *arg)
-{
-	t_philo	*philo;
-	int		index;
-	int		i;
-
-	i = -1;
-	philo = (t_philo *)arg;
-	index = philo->place_in_table;
-	while (1)
-	{
-		if (philo_died(philo->data, index - 1))
-		{
-			while (++i < philo->data->philo_num)
-				sem_actions(&philo->data->sem_eat, POST, NULL, 0);
-			printf("aqui\n");
-			return (NULL);
-		}
-	}
-	return (NULL);
-}
-
 long	gettime(long time)
 {
 	struct timeval	start;

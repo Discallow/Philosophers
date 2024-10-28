@@ -28,17 +28,19 @@ void	*ft_calloc(size_t n, size_t size)
 
 int	init_semaphores(t_data *data)
 {
+	sem_unlink(SEM_NAME);
+	sem_unlink(WRITE_SEM_NAME);
+	sem_unlink(FORKS_SEM_NAME);
+	sem_unlink(MAX_PHILO_NAME);
+	sem_unlink(EAT_SEM_NAME);
+	sem_unlink(DEATH_SEM_NAME);
 	if (sem_actions(&data->sem_write, OPEN, WRITE_SEM_NAME, 1)
 		|| sem_actions(&data->forks->sem, OPEN, FORKS_SEM_NAME, data->philo_num)
 		|| sem_actions(&data->sem_data, OPEN, SEM_NAME, 1)
 		|| sem_actions(&data->sem_eat, OPEN, EAT_SEM_NAME, 0)
-		|| sem_actions(&data->sem_death, OPEN, DEATH_SEM_NAME, 0))
-		return (1);
-	if (data->philo_num == 1 && sem_actions(&data->sem_max_philo, OPEN,
-		MAX_PHILO_NAME, data->philo_num))
-		return (1);
-	else if (sem_actions(&data->sem_max_philo, OPEN,
-		MAX_PHILO_NAME, data->philo_num - 1))
+		|| sem_actions(&data->sem_death, OPEN, DEATH_SEM_NAME, 0)
+		|| sem_actions(&data->sem_max_philo, OPEN,
+			MAX_PHILO_NAME, data->philo_num - 1))
 		return (1);
 	return (0);
 }

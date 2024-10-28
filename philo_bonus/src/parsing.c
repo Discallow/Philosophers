@@ -94,7 +94,7 @@ int	parse(t_data *data, char **av)
 	if (data->philo_num == LONG_MIN || data->time_to_die == LONG_MIN
 		|| data->time_to_eat == LONG_MIN || data->time_to_sleep == LONG_MIN
 		|| data->min_times_to_eat == LONG_MIN)
-			return (1);
+		return (1);
 	data->time_to_die *= MILLISECOND;
 	data->time_to_eat *= MILLISECOND;
 	data->time_to_sleep *= MILLISECOND;

@@ -47,6 +47,7 @@ long	process_long(pthread_mutex_t *mtx, t_action action, long *value)
 {
 	long	check;
 
+	check = 0;
 	if (action == READ)
 	{
 		mtx_actions(mtx, LOCK);
@@ -67,6 +68,7 @@ bool	process_bool(pthread_mutex_t *mtx, t_action action, bool *value)
 {
 	bool	check;
 
+	check = false;
 	if (action == READ)
 	{
 		mtx_actions(mtx, LOCK);

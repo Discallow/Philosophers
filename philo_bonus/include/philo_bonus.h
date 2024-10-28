@@ -138,5 +138,6 @@ void	clean_data(t_data *data);
 /*MEALS FUNCTIONS*/
 int		start_dinner(t_data *data);
 void	*monitor_thread(void *arg);
+void	monitor_threads(t_data *data);
 
 #endif
