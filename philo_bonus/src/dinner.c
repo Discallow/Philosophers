@@ -50,7 +50,11 @@ void	think(t_philo *philo, int *flag)
 	else
 		write_message(philo, THINK);
 	if (philo->data->philo_num % 2 == 0)
+	{
+		if (philo->place_in_table % 2 == 0)
+			usleep(1000);
 		return ;
+	}
 	time_to_think = philo->data->time_to_eat * 2
 		- philo->data->time_to_sleep;
 	if (time_to_think < 0)

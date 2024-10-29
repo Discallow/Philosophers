@@ -83,7 +83,6 @@ static long	check_valid_input(char *str)
 int	parse(t_data *data, char **av)
 {
 	data->philo_num = check_valid_input(av[1]);
-	data->philo_num = check_valid_input(av[1]);
 	data->time_to_die = check_valid_input(av[2]);
 	data->time_to_eat = check_valid_input(av[3]);
 	data->time_to_sleep = check_valid_input(av[4]);
