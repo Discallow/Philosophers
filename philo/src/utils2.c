@@ -81,7 +81,7 @@ void	improved_usleep(long microseconds, t_data *data)
 		cur = gettime(MICROSECOND) - start;
 		left = microseconds - cur;
 		if (left > MILLISECOND)
-			usleep(left / 2);
+			usleep(1500);
 		else
 		{
 			while (1)

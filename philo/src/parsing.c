@@ -26,7 +26,7 @@ int	ft_isdigit(int c)
 	return (0);
 }
 
-long	ft_atol(const char *s)
+long	ft_atol(const char *s, int flag)
 {
 	long	result;
 	long	i;
@@ -47,12 +47,14 @@ long	ft_atol(const char *s)
 		i++;
 		size++;
 	}
-	if (result > INT_MAX)
+	if (flag && (result > INT_MAX || result == 0))
+		return (invalid_input(s));
+	else if (result > INT_MAX)
 		return (invalid_input(s));
 	return (result);
 }
 
-static long	check_valid_input(char *str)
+static long	check_valid_input(char *str, int flag)
 {
 	long	i;
 	long	num;
@@ -76,18 +78,18 @@ static long	check_valid_input(char *str)
 	}
 	if (!str[i] || !ft_isdigit(str[i]))
 		return (invalid_input(str));
-	num = ft_atol(str + i);
+	num = ft_atol(str + i, flag);
 	return (num);
 }
 
 int	parse(t_data *data, char **av)
 {
-	data->philo_num = check_valid_input(av[1]);
-	data->time_to_die = check_valid_input(av[2]);
-	data->time_to_eat = check_valid_input(av[3]);
-	data->time_to_sleep = check_valid_input(av[4]);
+	data->philo_num = check_valid_input(av[1], 1);
+	data->time_to_die = check_valid_input(av[2], 1);
+	data->time_to_eat = check_valid_input(av[3], 1);
+	data->time_to_sleep = check_valid_input(av[4], 1);
 	if (av[5])
-		data->min_times_to_eat = check_valid_input(av[5]);
+		data->min_times_to_eat = check_valid_input(av[5], 0);
 	else
 		data->min_times_to_eat = -1;
 	if (data->philo_num == LONG_MIN || data->time_to_die == LONG_MIN

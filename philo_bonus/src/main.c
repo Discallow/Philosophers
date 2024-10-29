@@ -26,7 +26,7 @@ void	clean_data(t_data *data)
 	sem_actions(&data->sem_eat, CLOSE, NULL, 0);
 	sem_actions(&data->sem_death, CLOSE, NULL, 0);
 	i = -1;
-	while (++i < data->philo_num)
+	while (++i < data->philo_num && data->min_times_to_eat > 0)
 	{
 		if (data->philos[i].pid != -1)
 			kill(data->philos[i].pid, SIGKILL);

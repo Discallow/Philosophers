@@ -74,6 +74,7 @@ void	routine(t_philo *philo)
 	think(philo, &flag);
 	while (1)
 	{
+		usleep(100);
 		eat(philo);
 		write_message(philo, SLEEP);
 		improved_usleep(philo->data->time_to_sleep);
