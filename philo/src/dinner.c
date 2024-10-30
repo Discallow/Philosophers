@@ -39,36 +39,6 @@ void	eat(t_philo *philo)
 	mtx_actions(&philo->second_fork->mtx, UNLOCK);
 }
 
-/*time to think = time_to_eat * 2 - time_to_sleep
-Example: ./philo 3 800 200 100 / ./philo 3 800 200 400*/
-void	think(t_philo *philo, long *flag)
-{
-	long	time_to_think;
-
-	if (process_bool(&philo->data->mtx, READ, &philo->data->meal_end))
-		return ;
-	if (process_long(&philo->data->mtx, READ, flag))
-	{
-		mtx_actions(&philo->data->mtx, LOCK);
-		*flag = 0;
-		mtx_actions(&philo->data->mtx, UNLOCK);
-	}
-	else
-		write_message(philo, THINK);
-	if (philo->data->philo_num % 2 == 0)
-	{
-		if (philo->place_in_table % 2 == 0)
-			usleep(1000);
-		return ;
-	}
-	time_to_think = philo->data->time_to_eat * 2
-		- philo->data->time_to_sleep;
-	if (time_to_think < 0)
-		time_to_think = 0;
-	if (philo->place_in_table % 2)
-		improved_usleep(time_to_think * 0.3, philo->data);
-}
-
 void	*routine(void *arg)
 {
 	t_philo	*philo;
@@ -82,17 +52,17 @@ void	*routine(void *arg)
 	mtx_actions(&philo->mtx, LOCK);
 	philo->last_meal_time = gettime(MILLISECOND);
 	mtx_actions(&philo->mtx, UNLOCK);
-	think(philo, &flag);
 	process_long(&philo->data->mtx, CHANGE, &philo->data->num_philos_ready);
 	while (1)
 	{
 		if (process_bool(&philo->data->mtx, READ, &philo->data->meal_end)
 			|| process_bool(&philo->mtx, READ, &philo->philos_full))
 			return (NULL);
+		usleep(100);
 		eat(philo);
 		write_message(philo, SLEEP);
 		improved_usleep(philo->data->time_to_sleep, philo->data);
-		think(philo, &flag);
+		write_message(philo, THINK);
 	}
 	return (NULL);
 }

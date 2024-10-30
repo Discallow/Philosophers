@@ -41,28 +41,6 @@ void	eat(t_philo *philo)
 	sem_actions(&philo->data->sem_max_philo, POST, NULL, 0);
 }
 
-void	think(t_philo *philo, int *flag)
-{
-	long	time_to_think;
-
-	if (*flag)
-		*flag = 0;
-	else
-		write_message(philo, THINK);
-	if (philo->data->philo_num % 2 == 0)
-	{
-		if (philo->place_in_table % 2 == 0)
-			usleep(1000);
-		return ;
-	}
-	time_to_think = philo->data->time_to_eat * 2
-		- philo->data->time_to_sleep;
-	if (time_to_think < 0)
-		time_to_think = 0;
-	if (philo->place_in_table % 2)
-		improved_usleep(time_to_think * 0.3);
-}
-
 void	routine(t_philo *philo)
 {
 	int		flag;
@@ -71,14 +49,13 @@ void	routine(t_philo *philo)
 	mtx_actions(&philo->mtx, LOCK);
 	philo->last_meal_time = gettime(MILLISECOND);
 	mtx_actions(&philo->mtx, UNLOCK);
-	think(philo, &flag);
 	while (1)
 	{
 		usleep(100);
 		eat(philo);
 		write_message(philo, SLEEP);
 		improved_usleep(philo->data->time_to_sleep);
-		think(philo, &flag);
+		write_message(philo, THINK);
 	}
 }
 

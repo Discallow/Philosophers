@@ -41,7 +41,7 @@ long	ft_atol(const char *s, int flag)
 		i++;
 	while (s[i] >= '0' && s[i] <= '9')
 	{
-		if (size > 10)
+		if (size > 10 && result > INT_MAX)
 			return (invalid_input(s));
 		result = result * 10 + (s[i] - '0');
 		i++;
