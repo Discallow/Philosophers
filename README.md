@@ -6,10 +6,7 @@
 - [Objectives](#objectives)
 - [Mandatory Part](#mandatory-part)
 - [Bonus Part](#bonus-part)
-- [Implementation](#implementation)
-- [Additional Notes](#adittional-notes)
-- [Resources](#resources)
-- [Usage](#usage)
+- [Conclusion](#conclusion)
 
 ---
 
@@ -58,60 +55,53 @@ The goal of this project is to:
 
 The mandatory part of this project requires implementing the dining philosophers simulation using threads and mutexes.
 
-- Key Requirements:
-Each philosopher must be a separate thread.
-Forks are represented as mutexes to avoid simultaneous access.
-The program should log when each philosopher starts eating, sleeping, or thinking.
-If a philosopher does not start eating within time_to_die milliseconds since their last meal, they are considered dead, and the simulation stops.
-Output format must be strictly followed for grading.
+### Key Requirements:
+- Each philosopher must be a separate thread.
+- Forks are represented as mutexes to avoid simultaneous access.
+- The program should log when each philosopher starts eating, sleeping, or thinking.
+- If a philosopher does not start eating within time_to_die milliseconds since their last meal, they are considered dead, and the simulation stops.
 
-Program Workflow:
-Each philosopher attempts to pick up the two forks adjacent to them.
-After obtaining both forks, the philosopher eats, then releases the forks and goes to sleep.
-After sleeping, the philosopher starts thinking and the cycle continues.
-If a philosopher exceeds time_to_die without eating, the program should print that the philosopher has died and terminate.
+### Program Workflow:
+
+- Each philosopher attempts to pick up the two forks adjacent to them.
+- After obtaining both forks, the philosopher eats, then releases the forks and goes to sleep.
+- After sleeping, the philosopher starts thinking and the cycle continues.
+- If a philosopher exceeds time_to_die without eating, the program should print that the philosopher has died and terminate.
 Example Output:
-csharp
-Copiar código
-0ms 1 is thinking
-5ms 1 is eating
-15ms 2 is sleeping
-...
-500ms 3 has died
-Bonus Part
-The bonus part of the project extends the requirements by using processes and semaphores instead of threads and mutexes.
+    ```bash
+    0    ms 1 is thinking
+    5    ms 1 is eating
+    15   ms 2 is sleeping
+    ...
+    500  ms 3 has died
 
-Key Requirements:
-Implement each philosopher as a separate process.
-Use semaphores to manage the forks.
-Each philosopher process monitors their own state to check if they exceed the time_to_die.
-The main process should be able to track the philosophers and stop the simulation when a philosopher dies.
-You must handle inter-process communication and termination properly to avoid zombie processes.
-Additional Bonus Features:
-Add a semaphore to control when all philosophers start eating, so they pick up forks at nearly the same time.
-Ensure robust cleanup of all processes and semaphores to prevent resource leakage.
-Implementation
-Files and Structure
-philosophers.c: Main file where philosophers are created, and threads or processes are managed.
-philosophers.h: Header file containing function prototypes and shared data structures.
-Makefile: To compile and clean the project.
-utils.c: Utility functions for time management, logging, etc.
-Key Functions
-init_philosophers(): Initializes philosopher data, threads/processes, and semaphores or mutexes.
-monitor_philosophers(): Monitors philosophers for death and terminates the simulation if any philosopher dies.
-philosopher_routine(): Main routine for each philosopher to alternate between eating, thinking, and sleeping.
-cleanup_resources(): Cleans up allocated memory, mutexes, and semaphores.
-Additional Notes
-Error Handling
-Validate all input arguments and print an error message for invalid inputs.
-Ensure all resources (threads, mutexes, processes, semaphores) are properly cleaned up to avoid memory leaks and dangling processes.
-Avoiding Deadlocks
-Use resource ordering or a timeout mechanism to avoid deadlocks where philosophers wait indefinitely for forks.
-Synchronization
-Implement careful synchronization for shared variables like the death status and log output to avoid race conditions.
-Resources
-For more information on the Dining Philosophers Problem and related synchronization issues, see:
+---
 
-Dining Philosophers Problem on Wikipedia
-POSIX Threads Programming
-Semaphore Tutorial
+## Bonus Part
+
+- The bonus part of the project extends the requirements by using processes and semaphores instead of threads and mutexes.
+
+### Key Requirements:
+
+- Implement each philosopher as a separate process.
+- Use semaphores to manage the forks.
+- Each philosopher process monitors their own state to check if they exceed the time_to_die.
+- The main process should be able to track the philosophers and stop the simulation when a philosopher dies.
+- You must handle inter-process communication and termination properly to avoid zombie processes.
+
+### Additional Bonus Features:
+
+- Add a semaphore to control when all philosophers start eating, so they pick up forks at nearly the same time.
+- Ensure robust cleanup of all processes and semaphores to prevent resource leakage.
+- Ensure all resources (threads, mutexes, processes, semaphores) are properly cleaned up to avoid memory leaks and dangling processes.
+- Use resource ordering or a timeout mechanism to avoid deadlocks where philosophers wait indefinitely for forks.
+
+---
+
+## Conclusion
+
+- The Philosophers project provides valuable insight into solving concurrency problems and managing shared resources. By implementing this classic problem, I gained hands-on experience with threads, mutexes, processes, and semaphores, deepening my understanding of how to prevent issues like deadlocks and race conditions. 
+- Successfully managing these resources requires careful synchronization and clear structuring of interdependent processes, skills essential for building robust, concurrent systems.
+- Additionally, the optional bonus feature of implementing the simulation using semaphores and processes (instead of just threads and mutexes) allowed me to explore inter-process communication and process management in more depth with semaphores.
+
+Overall, this project is a challenging yet rewarding exercise that combines theoretical concepts with practical coding skills, providing a solid foundation in multithreading and concurrency—skills that are highly applicable in real-world applications requiring efficient resource management.
