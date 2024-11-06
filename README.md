@@ -33,25 +33,38 @@ Example:
 Arguments:
 
 <number_of_philosophers>: Number of philosophers and forks.
+
 <time_to_die>: Time (in ms) that a philosopher can go without eating before dying.
+
 <time_to_eat>: Time (in ms) that a philosopher spends eating.
+
 <time_to_sleep>: Time (in ms) that a philosopher spends sleeping.
+
 [number_of_times_each_philosopher_must_eat] (optional): The number of times each philosopher must eat before the simulation ends. If not provided, the simulation will run indefinitely until a philosopher dies.
-Objectives
+
+---
+
+## Objectives
+
 The goal of this project is to:
 
-Understand and implement concurrency using threads.
-Properly manage resources with mutexes to avoid race conditions and deadlocks.
-Optionally, manage inter-process communication using semaphores and processes for the bonus.
-Mandatory Part
+- Understand and implement concurrency using threads.
+- Properly manage resources with mutexes to avoid race conditions and deadlocks.
+- Optionally, manage inter-process communication using semaphores and processes for the bonus.
+
+---
+
+## Mandatory Part
+
 The mandatory part of this project requires implementing the dining philosophers simulation using threads and mutexes.
 
-Key Requirements:
+- Key Requirements:
 Each philosopher must be a separate thread.
 Forks are represented as mutexes to avoid simultaneous access.
 The program should log when each philosopher starts eating, sleeping, or thinking.
 If a philosopher does not start eating within time_to_die milliseconds since their last meal, they are considered dead, and the simulation stops.
 Output format must be strictly followed for grading.
+
 Program Workflow:
 Each philosopher attempts to pick up the two forks adjacent to them.
 After obtaining both forks, the philosopher eats, then releases the forks and goes to sleep.
